@@ -13,10 +13,41 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState({
+    0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0
+  })
+  const [maxVotes, setMaxVotes] = useState(0)
+
+  const pickRandomAnecdote = () => {
+    let randomInt = Math.floor(Math.random() * anecdotes.length)
+    setSelected(randomInt)
+  }
+
+  const voteForAnecdote = () => {
+    const newVote = {
+      ...votes
+    }
+    newVote[selected] += 1
+    setVotes(newVote)
+    updateMaxVote()
+  }
+
+  const updateMaxVote = () => {
+    const maxVote = Math.max(...Object.values(votes)) //... spread operator expands array into separate values
+    setMaxVotes(Object.keys(votes).find(key => votes[key] == maxVote)) //find works directly on the array,
+    // searches for the first item that fulfills a certain condition (=true)
+  }
 
   return (
     <div>
-      {anecdotes[selected]}
+      <h1>Anecdote of the day</h1>
+        <p>{anecdotes[selected]}</p>
+        <p>has {votes[selected]} votes</p>
+      <button onClick={voteForAnecdote}>Vote</button>
+      <button onClick={pickRandomAnecdote}>Next anecdote</button>
+      <h1>Anecdote with most votes</h1>
+        <p>{anecdotes[maxVotes]}</p>
+        <p>has {votes[maxVotes]} votes</p>
     </div>
   )
 }
